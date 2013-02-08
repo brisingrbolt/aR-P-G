@@ -1,0 +1,4 @@
+Style conventions for aR-P-G include:
+4-space indentation
+single quotes
+FIGGUR IT OWT
