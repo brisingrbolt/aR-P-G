@@ -1,21 +1,25 @@
-import pygame, os.path, images
+import pygame, os.path, images, config
 
 class Grid(): ## Is it necessary to subclass this? Will investigate later
     def __init__(self):
-        self.tiles = {}
-        self.x = None
-        self.y = None
+        pass
 
 class GridFromMap(Grid):
     def __init__(self, mapName):
+        self.tiles = {}
+        self.width = None
+        self.height = None
+        self.tileSize = 32
         self.loaded = False
 
-    def loadFromMap(self, mapName, mapDir = '../maps/'):
+        self.loadFromMap(mapName)
+
+    def loadFromMap(self, mapName, mapDir = 'maps/'):
         if not images.initialized: images.init()
 
         # Check to make sure the file exists
         if not os.path.exists(mapDir + mapName):
-            config.log(mapname + ': Map not found!', 'ERROR')
+            config.log(mapName + ': Map not found!', 'ERROR')
             return 
         
         # Actually load the file
@@ -23,33 +27,68 @@ class GridFromMap(Grid):
 
         # Try reading the first line for width NOTE: This might change when multiple layers are implemented
         line = mapFile.readline()
-        self.x = len(line.replace('\n', '').split())
-        config.log('Map width: ' + self.x)
-        f.seek(0)
+        self.width = len(line.replace('\n', '').split())
+        config.log('Map width: ' + str(self.width))
+        mapFile.seek(0)
 
         # Try reading number of lines for height NOTE: See above
-        for i, l in enumerate(f):
+        for i, l in enumerate(mapFile):
             pass
-        self.y = i + 1
-        config.log('Map height: ' + self.y)
-        f.seek(0)
+        self.height = i + 1
+        config.log('Map height: ' + str(self.height))
+        mapFile.seek(0)
 
         # Check to make sure all tiles actually exist?
 
         # Initalize tile dictionary
         x, y = 1, 1
-        for i in range(x):
-            for e in range(y):
+        for i in range(self.width):
+            for e in range(self.height):
                 self.tiles[(x,y)] = {}
-                self.tiles[(x,y)] = None
-                self.tiles[(x,y)]['coords'] = (((x-1)tileSize),((y-1)*tileSize)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
+                self.tiles[(x,y)]['coords'] = (((x-1)*self.tileSize),((y-1)*self.tileSize)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
                 y += 1
             y = 1
             x += 1
         
         # Read in map data and fill self.tiles with image references, one layer for now
-        
+        x, y = 1, 1
+        for line in mapFile.readlines():
+            line = line.replace('\n', '')
+            for tile in line.split():
+                self.tiles[(x,y)][1] = int(tile)
+                x += 1
+            x = 1
+            y += 1
+
+        # This grid is now loaded!
         self.loaded = True
 
-    def display(self, screen, location):
-        pass
+    def display(self, screen, location = None):
+        if not self.loaded:
+            config.log('Grid is not loaded!', 'ERROR')
+            return
+        for tile in self.tiles:
+            image = images.get(self.tiles[tile][1])
+            screen.blit(image, self.tiles[tile]['coords'])
+        config.log('Grid drawn to screen')
+
+    def move(self, direction):
+        if not self.loaded:
+            config.log('Grid is not loaded!', 'ERROR')
+            return
+        if direction == 'up':
+            for tile in self.tiles:
+                newCoords = ( (self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + 4) )
+                self.tiles[tile]['coords'] = newCoords
+        if direction == 'down':
+            for tile in self.tiles:
+                newCoords = ( (self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - 4) )
+                self.tiles[tile]['coords'] = newCoords
+        if direction == 'left':
+            for tile in self.tiles:
+                newCoords = ( (self.tiles[tile]['coords'][0] + 4), (self.tiles[tile]['coords'][1]) )
+                self.tiles[tile]['coords'] = newCoords
+        if direction == 'right':
+            for tile in self.tiles:
+                newCoords = ( (self.tiles[tile]['coords'][0] - 4), (self.tiles[tile]['coords'][1]) )
+                self.tiles[tile]['coords'] = newCoords
