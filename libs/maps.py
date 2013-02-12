@@ -55,7 +55,10 @@ class GridFromMap(Grid):
         for line in mapFile.readlines():
             line = line.replace('\n', '')
             for tile in line.split():
-                self.tiles[(x,y)][1] = int(tile)
+                layers = tile.split(',')
+                self.tiles[(x,y)][1] = int(layers[0])
+                self.tiles[(x,y)][2] = int(layers[1])
+                self.tiles[(x,y)][3] = int(layers[2])
                 x += 1
             x = 1
             y += 1
@@ -68,8 +71,10 @@ class GridFromMap(Grid):
             config.log('Grid is not loaded!', 'ERROR')
             return
         for tile in self.tiles:
-            image = images.get(self.tiles[tile][1])
-            screen.blit(image, self.tiles[tile]['coords'])
+            for i in range(3):
+                image = images.get(self.tiles[tile][i+1])
+                if not image == None: screen.blit(image, self.tiles[tile]['coords'])
+                
         config.log('Grid drawn to screen')
 
     def move(self, direction):
