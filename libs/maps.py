@@ -5,38 +5,38 @@ class Grid(): ## Is it necessary to subclass this? Will investigate later
         pass
 
 class GridFromMap(Grid):
-    def __init__(self, mapName):
+    def __init__(self, map_name):
         self.tiles = {}
         self.width = None
         self.height = None
-        self.tileSize = 32
+        self.tile_size = 32
         self.loaded = False
 
-        self.loadFromMap(mapName)
+        self.load_from_map(map_name)
 
-    def loadFromMap(self, mapName, mapDir = 'maps/'):
+    def load_from_map(self, map_name, map_dir = 'maps/'):
         if not images.initialized: images.init()
 
         # Check to make sure the file exists
-        if not os.path.exists(mapDir + mapName):
-            config.log(mapName + ': Map not found!', 'ERROR')
+        if not os.path.exists(map_dir + map_name):
+            config.log(map_name + ': Map not found!', 'ERROR')
             return 
         
         # Actually load the file
-        mapFile = open(mapDir + mapName, 'r')
+        map_file = open(map_dir + map_name, 'r')
 
         # Try reading the first line for width NOTE: This might change when multiple layers are implemented
-        line = mapFile.readline()
+        line = map_file.readline()
         self.width = len(line.replace('\n', '').split())
         config.log('Map width: ' + str(self.width))
-        mapFile.seek(0)
+        map_file.seek(0)
 
         # Try reading number of lines for height NOTE: See above
-        for i, l in enumerate(mapFile):
+        for i, l in enumerate(map_file):
             pass
         self.height = i + 1
         config.log('Map height: ' + str(self.height))
-        mapFile.seek(0)
+        map_file.seek(0)
 
         # Check to make sure all tiles actually exist?
 
@@ -45,14 +45,14 @@ class GridFromMap(Grid):
         for i in range(self.width):
             for e in range(self.height):
                 self.tiles[(x,y)] = {}
-                self.tiles[(x,y)]['coords'] = (((x-1)*self.tileSize),((y-1)*self.tileSize)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
+                self.tiles[(x,y)]['coords'] = (((x-1) * self.tile_size), ((y-1) * self.tile_size)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
                 y += 1
             y = 1
             x += 1
         
         # Read in map data and fill self.tiles with image references, one layer for now
         x, y = 1, 1
-        for line in mapFile.readlines():
+        for line in map_file.readlines():
             line = line.replace('\n', '')
             for tile in line.split():
                 layers = tile.split(',')
@@ -83,17 +83,17 @@ class GridFromMap(Grid):
             return
         if direction == 'up':
             for tile in self.tiles:
-                newCoords = ( (self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + 4) )
-                self.tiles[tile]['coords'] = newCoords
+                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + 4))
+                self.tiles[tile]['coords'] = new_coords
         if direction == 'down':
             for tile in self.tiles:
-                newCoords = ( (self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - 4) )
-                self.tiles[tile]['coords'] = newCoords
+                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - 4))
+                self.tiles[tile]['coords'] = new_coords
         if direction == 'left':
             for tile in self.tiles:
-                newCoords = ( (self.tiles[tile]['coords'][0] + 4), (self.tiles[tile]['coords'][1]) )
-                self.tiles[tile]['coords'] = newCoords
+                new_coords = ((self.tiles[tile]['coords'][0] + 4), (self.tiles[tile]['coords'][1]))
+                self.tiles[tile]['coords'] = new_coords
         if direction == 'right':
             for tile in self.tiles:
-                newCoords = ( (self.tiles[tile]['coords'][0] - 4), (self.tiles[tile]['coords'][1]) )
-                self.tiles[tile]['coords'] = newCoords
+                new_coords = ((self.tiles[tile]['coords'][0] - 4), (self.tiles[tile]['coords'][1]))
+                self.tiles[tile]['coords'] = new_coords

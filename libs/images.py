@@ -1,11 +1,11 @@
 import pygame, config
 
 initialized = False
-imageDir = './images/'
+image_dir = './images/'
 
 def init(): # This is where the images are converted from indexes to actual images.
-    images[1] = pygame.image.load(imageDir + 'grass.png')
-    images[2] = pygame.image.load(imageDir + 'placeholder.png')
+    images[1] = pygame.image.load(image_dir + 'grass.png')
+    images[2] = pygame.image.load(image_dir + 'placeholder.png')
     initialized = True
 
 def get(index):

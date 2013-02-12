@@ -3,7 +3,7 @@ from classes import classes     # NOTE: Currently, the only affect class will ha
 from abilities import abilities
 
 class Player:
-    def __init__(self, playerClass, chosenSaveGame = ""): 
+    def __init__(self, player_class, chosen_save_game = ""): 
     
         # Instantiate player variables
         self.health = {}            # Self explanatory dictionary.
@@ -13,13 +13,13 @@ class Player:
         self.inv = {}               # Need to implement, maybe in another class or a subclass?
         self.info = {}              # Dictionary of string descriptors for menus and such
     
-        if save.exists(chosenSaveGame):
+        if save.exists(chosen_save_game):
             # Load previous save!
         else: # Should only run the first time. Afterwards, it should be loading from a savegame above.
-            if not playerClass in classes:
+            if not player_class in classes:
                 config.log('Error: unknown class!', 'ERROR') # Make this a log function somewhere else?
                 return
-            self.health = classes[playerClass]['health']
-            self.mana = classes[playerClass]['mana']
-            self.abilities = abilities.getAbilities(playerClass)
-            self.stats = classes[playerClass]['stats']
+            self.health = classes[player_class]['health']
+            self.mana = classes[player_class]['mana']
+            self.abilities = abilities.get_abilities(player_class)
+            self.stats = classes[player_class]['stats']

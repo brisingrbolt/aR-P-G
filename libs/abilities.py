@@ -1,7 +1,7 @@
-def getAbilities(playerClass):
+def get_abilities(player_class):
     out = {}
     for ability in abilities:
-        if playerClass in abilities[ability]['classes']:
+        if player_class in abilities[ability]['classes']:
             out[ability] = abilities[ability]
     return out
 
