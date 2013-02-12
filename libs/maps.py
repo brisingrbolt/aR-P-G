@@ -1,4 +1,7 @@
-import pygame, os.path, images, config
+import pygame
+import os.path
+import images
+import config
 
 class Grid(): ## Is it necessary to subclass this? Will investigate later
     def __init__(self):
@@ -11,6 +14,8 @@ class GridFromMap(Grid):
         self.height = None
         self.tile_size = 32
         self.loaded = False
+        self.moving = False
+        self.clock = pygame.time.Clock()
 
         self.load_from_map(map_name)
 
@@ -25,13 +30,13 @@ class GridFromMap(Grid):
         # Actually load the file
         map_file = open(map_dir + map_name, 'r')
 
-        # Try reading the first line for width NOTE: This might change when multiple layers are implemented
+        # Try reading the first line for width
         line = map_file.readline()
         self.width = len(line.replace('\n', '').split())
         config.log('Map width: ' + str(self.width))
         map_file.seek(0)
 
-        # Try reading number of lines for height NOTE: See above
+        # Try reading number of lines for height
         for i, l in enumerate(map_file):
             pass
         self.height = i + 1
@@ -73,27 +78,25 @@ class GridFromMap(Grid):
         for tile in self.tiles:
             for i in range(3):
                 image = images.get(self.tiles[tile][i+1])
-                if not image == None: screen.blit(image, self.tiles[tile]['coords'])
-                
-        config.log('Grid drawn to screen')
+                if not image is None: screen.blit(image, self.tiles[tile]['coords'])
 
-    def move(self, direction):
+    def move(self, direction, distance = 4):
         if not self.loaded:
             config.log('Grid is not loaded!', 'ERROR')
             return
         if direction == 'up':
             for tile in self.tiles:
-                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + 4))
+                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + distance))
                 self.tiles[tile]['coords'] = new_coords
         if direction == 'down':
             for tile in self.tiles:
-                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - 4))
+                new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - distance))
                 self.tiles[tile]['coords'] = new_coords
         if direction == 'left':
             for tile in self.tiles:
-                new_coords = ((self.tiles[tile]['coords'][0] + 4), (self.tiles[tile]['coords'][1]))
+                new_coords = ((self.tiles[tile]['coords'][0] + distance), (self.tiles[tile]['coords'][1]))
                 self.tiles[tile]['coords'] = new_coords
         if direction == 'right':
             for tile in self.tiles:
-                new_coords = ((self.tiles[tile]['coords'][0] - 4), (self.tiles[tile]['coords'][1]))
+                new_coords = ((self.tiles[tile]['coords'][0] - distance), (self.tiles[tile]['coords'][1]))
                 self.tiles[tile]['coords'] = new_coords

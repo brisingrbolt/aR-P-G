@@ -1,4 +1,5 @@
-import pygame, config
+import pygame
+import config
 
 initialized = False
 image_dir = './images/'
@@ -11,7 +12,7 @@ def init(): # This is where the images are converted from indexes to actual imag
 def get(index):
     if not index > 0:
         return None
-    if images[index] == None:
+    if images[index] is None:
         config.log(images[index] + ': No such image.', 'ERROR')
     return images[index]
 
