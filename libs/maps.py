@@ -3,11 +3,7 @@ import os.path
 import images
 import config
 
-class Grid(): ## Is it necessary to subclass this? Will investigate later
-    def __init__(self):
-        pass
-
-class GridFromMap(Grid):
+class GridFromMap():
     def __init__(self, map_name):
         self.tiles = {}
         self.width = None
@@ -20,8 +16,6 @@ class GridFromMap(Grid):
         self.load_from_map(map_name)
 
     def load_from_map(self, map_name, map_dir = 'maps/'):
-        if not images.initialized: images.init()
-
         # Check to make sure the file exists
         if not os.path.exists(map_dir + map_name):
             config.log(map_name + ': Map not found!', 'ERROR')
@@ -30,20 +24,32 @@ class GridFromMap(Grid):
         # Actually load the file
         map_file = open(map_dir + map_name, 'r')
 
-        # Try reading the first line for width
+        line = map_file.readline()
+        while not line.startswith('tileset'):
+            line = map_file.readline()
+        line = line.replace('\n', '')
+        tileset = line.split()[-1]
+
+        images.initialize(tileset)
+
+        # Try reading the first line of map for width
+        self.read_to_map_start(map_file)
+
         line = map_file.readline()
         self.width = len(line.replace('\n', '').split())
         config.log('Map width: ' + str(self.width))
-        map_file.seek(0)
+
+        self.read_to_map_start(map_file)
 
         # Try reading number of lines for height
         for i, l in enumerate(map_file):
             pass
         self.height = i + 1
         config.log('Map height: ' + str(self.height))
-        map_file.seek(0)
 
-        # Check to make sure all tiles actually exist?
+        self.read_to_map_start(map_file)
+
+        # TODO: Check to make sure all tiles actually exist?
 
         # Initalize tile dictionary
         x, y = 1, 1
@@ -70,6 +76,13 @@ class GridFromMap(Grid):
 
         # This grid is now loaded!
         self.loaded = True
+    
+    def read_to_map_start(self, _file): # Start at beginning of file and read lines until the line starts with BEGIN
+        _file.seek(0)
+        line = _file.readline()
+        while not line.startswith('BEGIN'):
+            line = _file.readline()
+        return _file
 
     def display(self, screen, location = None):
         if not self.loaded:
@@ -78,25 +91,25 @@ class GridFromMap(Grid):
         for tile in self.tiles:
             for i in range(3):
                 image = images.get(self.tiles[tile][i+1])
-                if not image is None: screen.blit(image, self.tiles[tile]['coords'])
+                if image is not None: screen.blit(image, self.tiles[tile]['coords'])
 
     def move(self, direction, distance = 4):
         if not self.loaded:
             config.log('Grid is not loaded!', 'ERROR')
             return
-        if direction == 'up':
+        if direction is 'up':
             for tile in self.tiles:
                 new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] + distance))
                 self.tiles[tile]['coords'] = new_coords
-        if direction == 'down':
+        if direction is 'down':
             for tile in self.tiles:
                 new_coords = ((self.tiles[tile]['coords'][0]), (self.tiles[tile]['coords'][1] - distance))
                 self.tiles[tile]['coords'] = new_coords
-        if direction == 'left':
+        if direction is 'left':
             for tile in self.tiles:
                 new_coords = ((self.tiles[tile]['coords'][0] + distance), (self.tiles[tile]['coords'][1]))
                 self.tiles[tile]['coords'] = new_coords
-        if direction == 'right':
+        if direction is 'right':
             for tile in self.tiles:
                 new_coords = ((self.tiles[tile]['coords'][0] - distance), (self.tiles[tile]['coords'][1]))
                 self.tiles[tile]['coords'] = new_coords

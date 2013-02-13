@@ -26,7 +26,7 @@ pygame.display.update()
 def game():
     while 1:  
         for event in pygame.event.get():
-            if event.type == KEYDOWN:
+            if event.type is KEYDOWN:
                 if event.key in [K_UP, K_k]:
                     pressed["up"] = True
                 elif event.key in [K_DOWN, K_j]:
@@ -35,10 +35,10 @@ def game():
                     pressed["left"] = True
                 elif event.key in [K_RIGHT, K_l]:
                     pressed["right"] = True
-                elif event.key == K_ESCAPE:
+                elif event.key is K_ESCAPE:
                     print "Exit"
                     sys.exit()
-            elif event.type == KEYUP:
+            elif event.type is KEYUP:
                 if event.key in [K_UP, K_k]:
                     pressed["up"] = False
                 elif event.key in [K_DOWN, K_j]:
