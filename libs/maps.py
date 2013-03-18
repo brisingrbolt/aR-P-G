@@ -18,7 +18,7 @@ class GridFromMap():
     def load_from_map(self, map_name, map_dir = 'maps/'):
         # Check to make sure the file exists
         if not os.path.exists(map_dir + map_name):
-            config.log(map_name + ': Map not found!', 'ERROR')
+            config.log_e('Map not found: ' + map_name)
             return 
         
         # Actually load the file
@@ -37,7 +37,7 @@ class GridFromMap():
 
         line = map_file.readline()
         self.width = len(line.replace('\n', '').split())
-        config.log('Map width: ' + str(self.width))
+        config.log_d('Map width: ' + str(self.width))
 
         self.read_to_map_start(map_file)
 
@@ -45,7 +45,7 @@ class GridFromMap():
         for i, l in enumerate(map_file):
             pass
         self.height = i + 1
-        config.log('Map height: ' + str(self.height))
+        config.log_d('Map height: ' + str(self.height))
 
         self.read_to_map_start(map_file)
 
@@ -86,7 +86,7 @@ class GridFromMap():
 
     def display(self, screen, location = None):
         if not self.loaded:
-            config.log('Grid is not loaded!', 'ERROR')
+            config.log_e('Grid is not loaded!')
             return
         for tile in self.tiles:
             for i in range(3):
@@ -95,7 +95,7 @@ class GridFromMap():
 
     def move(self, direction, distance = 4):
         if not self.loaded:
-            config.log('Grid is not loaded!', 'ERROR')
+            config.log_e('Grid is not loaded!')
             return
         if direction is 'up':
             for tile in self.tiles:
