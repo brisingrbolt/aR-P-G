@@ -41,18 +41,18 @@ cloaks = {
                 'hero-down-1.png'
             ],
             'left': [
-                'hero-left-1.png',
-                'hero-left-1.png',
-                'hero-left-1.png',
-                'hero-left-1.png',
-                'hero-left-1.png'
+                'hero-west-1.png',
+                'hero-west-2.png',
+                'hero-west-3.png',
+                'hero-west-4.png',
+                'hero-west-3.png'
             ],
             'right': [
-                'hero-right-1.png',
-                'hero-right-1.png',
-                'hero-right-1.png',
-                'hero-right-1.png',
-                'hero-right-1.png'
+                'hero-east-1.png',
+                'hero-east-2.png',
+                'hero-east-3.png',
+                'hero-east-4.png',
+                'hero-east-3.png'
             ]
         }
     }
