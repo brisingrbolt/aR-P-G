@@ -32,13 +32,11 @@ class Player:
         self.current_frame = 1;
 
     def get_next_frame(self):
-        config.log_d("current_frame before get_next_frame(): " + str(self.current_frame))
         out = self.frames[self.direction][self.current_frame-1]
         if self.current_frame < len(self.frames[self.direction]):
             self.current_frame += 1
         else:
             self.current_frame = 1
-        config.log_d("current_frame after get_next_frame(): " + str(self.current_frame))
         return out
 
     def get_current_frame(self):

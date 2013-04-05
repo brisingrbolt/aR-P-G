@@ -3,7 +3,7 @@ import os.path
 import images
 import config
 
-class GridFromMap():
+class Map():
     def __init__(self, map_name):
         self.tiles = {}
         self.width = None
