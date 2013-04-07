@@ -30,29 +30,25 @@ cloaks = {
                 'hero-up-1.png',
                 'hero-up-2.png',
                 'hero-up-3.png',
-                'hero-up-4.png',
-                'hero-up-5.png'
+                'hero-up-4.png'
             ],
             'down': [
                 'hero-down-1.png',
-                'hero-down-1.png',
-                'hero-down-1.png',
-                'hero-down-1.png',
-                'hero-down-1.png'
+                'hero-down-2.png',
+                'hero-down-3.png',
+                'hero-down-4.png'
             ],
             'left': [
-                'hero-west-1.png',
-                'hero-west-2.png',
-                'hero-west-3.png',
-                'hero-west-4.png',
-                'hero-west-3.png'
+                'hero-left-1.png',
+                'hero-left-2.png',
+                'hero-left-3.png',
+                'hero-left-4.png'
             ],
             'right': [
-                'hero-east-1.png',
-                'hero-east-2.png',
-                'hero-east-3.png',
-                'hero-east-4.png',
-                'hero-east-3.png'
+                'hero-right-1.png',
+                'hero-right-2.png',
+                'hero-right-3.png',
+                'hero-right-4.png'
             ]
         }
     }

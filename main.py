@@ -14,7 +14,7 @@ INCREMENT_DISTANCE = 4  # By how much the coordinates change every frame.
 clock = pygame.time.Clock()
 
 # Resource variables
-FPS = 16
+FPS = 20
 x_size = 9 # Should always be odd, so that the player is in the dead middle
 y_size = 9
 screen = pygame.display.set_mode((x_size * TILE_SIZE,y_size * TILE_SIZE))

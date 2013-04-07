@@ -13,9 +13,9 @@ class Map():
         self.moving = False
         self.clock = pygame.time.Clock()
 
-        self.load_from_map(map_name)
+        self.load_from_file(map_name)
 
-    def load_from_map(self, map_name, map_dir = 'maps/'):
+    def load_from_file(self, map_name, map_dir = 'maps/'):
         # Check to make sure the file exists
         if not os.path.exists(map_dir + map_name):
             config.log_e('Map not found: ' + map_name)
@@ -70,6 +70,7 @@ class Map():
                 self.tiles[(x,y)][1] = int(layers[0])
                 self.tiles[(x,y)][2] = int(layers[1])
                 self.tiles[(x,y)][3] = int(layers[2])
+                self.tiles[(x,y)]['can_walk'] = True if int(layers[3]) is 1 else False
                 x += 1
             x = 1
             y += 1
@@ -92,6 +93,21 @@ class Map():
             for i in range(3):
                 image = images.get(self.tiles[tile][i+1])
                 if image is not None: screen.blit(image, self.tiles[tile]['coords'])
+
+    def can_walk(self, direction):
+        if direction is 'up':
+            for tile in self.tiles:
+                pass
+        if direction is 'down':
+            for tile in self.tiles:
+                pass
+        if direction is 'left':
+            for tile in self.tiles:
+                pass
+        if direction is 'right':
+            for tile in self.tiles:
+                pass
+        
 
     def move(self, direction, distance = 4):
         if not self.loaded:

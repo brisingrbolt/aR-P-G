@@ -3,8 +3,11 @@ from cloak import Cloak
 ## from abilities import abilities
 
 class Player:
+    FRAME_DISPLAY_TIMES = 4 ## Should be a multiple of two
+    
     frames = {};
     current_frame = 0;
+    frame_display_count = 1;
     direction = 'down';
     def __init__(self, chosen_save_game = None): 
     
@@ -33,10 +36,14 @@ class Player:
 
     def get_next_frame(self):
         out = self.frames[self.direction][self.current_frame-1]
+        if self.frame_display_count is not self.FRAME_DISPLAY_TIMES:
+            self.frame_display_count += 1
+            return out
         if self.current_frame < len(self.frames[self.direction]):
             self.current_frame += 1
         else:
             self.current_frame = 1
+        self.frame_display_count = 1
         return out
 
     def get_current_frame(self):
