@@ -19,7 +19,7 @@ x_size = 9 # Should always be odd, so that the player is in the dead middle
 y_size = 9
 screen = pygame.display.set_mode((x_size * TILE_SIZE,y_size * TILE_SIZE))
 player_coords = (x_size / 2 * TILE_SIZE, y_size / 2 * TILE_SIZE)
-grid = Map('map')
+grid = Map('map', (x_size, y_size))
 grid.display(screen)
 pygame.display.update()
 
@@ -71,17 +71,9 @@ def game():
             for key in pressed:
                 if pressed[key]:
                     a_key_pressed = True        
-            moving = a_key_pressed ## TODO: This is where logic for whether or not the map should be moving will be.
+            moving = a_key_pressed
 
         refresh_display(moving)
-        clock.tick(FPS)
-
-def move(direction):
-    iterations = TILE_SIZE / INCREMENT_DISTANCE
-    
-    for i in range(iterations):
-        grid.move(p.direction, INCREMENT_DISTANCE)
-        refresh_display(True)
         clock.tick(FPS)
 
 def should_be_locked():
@@ -89,14 +81,16 @@ def should_be_locked():
     if grid.tiles[(1,1)]['coords'][0] % TILE_SIZE == 0 and \
        grid.tiles[(1,1)]['coords'][1] % TILE_SIZE == 0:
         return False
+    elif not grid.can_walk(p.direction, INCREMENT_DISTANCE):
+        return False
     else:
         return True
 
-def refresh_display(animate_player = False):
+def refresh_display(moving = False):
     screen.fill((0, 0, 0))
     grid.display(screen)
-    if animate_player:
-        grid.move(p.direction, INCREMENT_DISTANCE)
+    if moving:
+        if grid.can_walk(p.direction, INCREMENT_DISTANCE*2): grid.move(p.direction)
         screen.blit(p.get_next_frame(), player_coords)
     else:
         screen.blit(p.get_current_frame(), player_coords)

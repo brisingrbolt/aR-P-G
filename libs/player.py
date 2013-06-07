@@ -22,10 +22,6 @@ class Player:
         self.cloak = Cloak('mctague') # This is where the character's current cloak (form) is stored.
         self.cloaks = {}              # Plural of above. Dictionary to hold unlocked forms for image and special move
                                       # objects.
-   
-        # Load class attributes
-        #self.health = classes[]['health']
-        #self.mana = classes[]['mana']
 
     def initialize_frames(self):
         self.frames = self.cloak.get_frames()

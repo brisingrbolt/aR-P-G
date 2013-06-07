@@ -3,15 +3,22 @@ import os.path
 import images
 import config
 
-class Map():
-    def __init__(self, map_name):
+TILE_SIZE = 32
+
+class Map:
+    ## map_name is the filname to load, size is the size of the window map will be displayed on
+    def __init__(self, map_name, size):
         self.tiles = {}
         self.width = None
         self.height = None
-        self.tile_size = 32
         self.loaded = False
         self.moving = False
         self.clock = pygame.time.Clock()
+
+        self.center_tile_coords = (
+            size[0] / 2 * TILE_SIZE,
+            size[1] / 2 * TILE_SIZE
+        )
 
         self.load_from_file(map_name)
 
@@ -56,7 +63,7 @@ class Map():
         for i in range(self.width):
             for e in range(self.height):
                 self.tiles[(x,y)] = {}
-                self.tiles[(x,y)]['coords'] = (((x-1) * self.tile_size), ((y-1) * self.tile_size)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
+                self.tiles[(x,y)]['coords'] = (((x-1) * TILE_SIZE), ((y-1) * TILE_SIZE)) # NOTE: May need to change this, so that the maps scroll properly. In other words, starting location needs to be determined based on the player's location within the map.
                 y += 1
             y = 1
             x += 1
@@ -94,20 +101,33 @@ class Map():
                 image = images.get(self.tiles[tile][i+1])
                 if image is not None: screen.blit(image, self.tiles[tile]['coords'])
 
-    def can_walk(self, direction):
+    def can_walk(self, direction, distance):
         if direction is 'up':
-            for tile in self.tiles:
-                pass
-        if direction is 'down':
-            for tile in self.tiles:
-                pass
-        if direction is 'left':
-            for tile in self.tiles:
-                pass
-        if direction is 'right':
-            for tile in self.tiles:
-                pass
+            new_coords = (self.center_tile_coords[0], self.center_tile_coords[1] + distance)
+        elif direction is 'down':
+            new_coords = (self.center_tile_coords[0], self.center_tile_coords[1] - distance)
+        elif direction is 'left':
+            new_coords = (self.center_tile_coords[0] + distance, self.center_tile_coords[1])
+        elif direction is 'right':
+            new_coords = (self.center_tile_coords[0] - distance, self.center_tile_coords[1])
+        else:
+            config.log_e('in can_walk: passed invalid direction')
+            return True
+        next_tile = self.get_tile_for(new_coords)
+        if next_tile is None:
+            config.log_e("Couldn't get next tile")
+            return True
+        return self.tiles[next_tile]['can_walk']
         
+    def get_tile_for(self, coordinates):
+        valid_tiles = []
+        for tile in self.tiles:
+            tile_coords = self.tiles[tile]['coords']
+            if tile_coords[0] >= coordinates[0] and tile_coords[0] < coordinates[0] + TILE_SIZE:
+                valid_tiles.append(tile)
+            tile_coords = self.tiles[tile]['coords']
+            if tile_coords[1] >= coordinates[1] and tile_coords[1] < coordinates[1] + TILE_SIZE:
+                return tile
 
     def move(self, direction, distance = 4):
         if not self.loaded:
